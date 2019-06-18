@@ -1,6 +1,5 @@
 'use strict';
 
-const fs = require('fs');
 const stemmer = require('./src/stemmer.js');
 const syllabler = require('./src/syllabler.js');
 const sentimenter = require('./src/sentimenter.js');

@@ -1,12 +1,11 @@
 {
-  "name": "lorca-nlp",
+  "name": "mlm-lorca-nlp",
   "version": "1.0.12",
   "description": "NLP for Spanish",
   "main": "lorca.js",
-  "homepage": "https://github.com/dmarman/lorca",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dmarman/lorca.git"
+    "url": "https://github.com/juandarodriguez/lorca.git"
   },
   "keywords": [
     "natural language processing",
