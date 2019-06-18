@@ -1,8 +1,6 @@
 'use strict';
 
 const stemmer = require('./src/stemmer.js');
-const syllabler = require('./src/syllabler.js');
-const sentimenter = require('./src/sentimenter.js');
 
 var cachedList
 
@@ -149,30 +147,6 @@ class Lorca
         return this;
     }
 
-    syllables()
-    {      
-        if(this.out instanceof Array){
-            for(var i = 0; i < this.out.length; i++){ 
-                if(this.out[i] instanceof Array){
-                    for(var j = 0; j < this.out[i].length; j++){
-                        this.out[i][j] = this.trimSyllables(this.out[i][j]);
-                    }
-                } else {
-                    this.out[i] = this.trimSyllables(this.out[i]);                
-                }
-            }
-        } else {
-            this.out = this.trimSyllables(this.out);
-        }
-
-       return this;
-    }
-
-    trimSyllables(word)
-    {
-        return syllabler(word);
-    } 
-
     concordance(mode)
     {
         var tokens = this.words().get();
@@ -227,23 +201,6 @@ class Lorca
         
         this.out = words/sentences;
         
-        return this;
-    }
-
-    syllablesPerWord()
-    {
-        var syllables = this.trimSyllables(this.text).length;
-        var words = this.trimWords(this.text).length;
-
-        this.out = syllables/words;
-
-        return this;
-    }
-
-    syllablesPerSentence()
-    {
-        this.out = this.wordsPerSentence().get()*this.syllablesPerWord().get();
-
         return this;
     }
 
@@ -345,38 +302,6 @@ class Lorca
         return this;
     }
 
-    ifsz()
-    {
-        var syllablesPerWord = this.syllablesPerWord().get();
-        var wordsPerSentence = this.wordsPerSentence().get();
-
-        this.out = Math.round(Math.abs(206.835 - 62.3*syllablesPerWord - wordsPerSentence));
-
-        return this;
-    }
-
-    grade()
-    {
-        if(this.out > 0 && this.out < 40){
-            this.out = "Muy difícil";
-            //this.infz.grade = "Universitario, Científico";
-        } else if (this.out > 40 && this.out < 55){
-            this.out = "Algo difícil";
-            //this.infz.grade = "Bachillerato, Divulgación científica, Prensa especializada";
-        } else if (this.out > 55 && this.out < 65){
-            this.out = "Normal";
-            //this.infz.grade = "E.S.O., Prensa general, Prensa deportiva";
-        } else if (this.out > 65 && this.out < 80){
-            this.out = "Bastante fácil";
-            //this.infz.grade = "Educación primaria, Prensa del corazón, Novelas de éxito";
-        } else if (this.out > 80){
-            this.out = "Muy fácil";
-            //this.infz.grade = "Educación primaria, Tebeos, Cómic";
-        }
-
-        return this;
-    }
-
     find(word)
     {
         var regex = new RegExp(word, 'gi');
@@ -407,35 +332,6 @@ class Lorca
         var speed = readingSpeed || 220;
 
         return 60*this.words().get().length/speed;
-    }
-
-    sentiment(type)
-    {    
-        type = type || 'afinn';
-
-        if(this.out instanceof Array){
-            for(var i = 0; i < this.out.length; i++){
-                if(this.out[i] instanceof Array){
-                    for(var j = 0; j < this.out[i].length; j++){                        
-                        this.out[i][j] = sentimenter.getSentiment(this.trimWords(this.out[i][j]), type);
-                    }
-                } else {
-                    // Sentence calculation
-                    this.out[i] = sentimenter.getSentiment(this.trimWords(this.out[i]), type);
-                }
-            }
-        } else {
-            var sentences = this.sentences().get();
-            var sentenceSentiments = this.sentiment(type);
-            
-            var add = (a, b) => {
-                return a + b
-            };
-
-            this.out = sentenceSentiments.reduce(add)/sentenceSentiments.length;
-        }
-        
-        return this.out;
     }
 
     stem(word)
