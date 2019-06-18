@@ -1,6 +1,6 @@
 {
   "name": "lml-lorca-nlp",
-  "version": "1.0.12",
+  "version": "1.0.14",
   "description": "NLP for Spanish",
   "main": "lorca.js",
   "repository": {
